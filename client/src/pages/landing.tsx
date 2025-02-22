@@ -19,6 +19,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from "lucide-react";
 import type { Work } from "@shared/schema";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Landing() {
   const [, navigate] = useLocation();
@@ -32,16 +33,22 @@ export default function Landing() {
   const sonnets = works.filter(w => w.type === "sonnet");
 
   const handleWorkSelect = async (work: Work) => {
-    const { data: passages } = await queryClient.fetchQuery({
-      queryKey: [`/api/works/${work.id}/passages`],
-    });
+    try {
+      const { data: passages } = await queryClient.fetchQuery({
+        queryKey: [`/api/works/${work.id}/passages`],
+      });
 
-    if (work.type === "sonnet") {
-      // Sonnets have only one passage, navigate directly
-      navigate(`/passage/${passages[0].id}`);
-    } else {
-      // Plays have multiple passages, navigate to work page
-      navigate(`/work/${work.id}`);
+      if (passages && passages.length > 0) {
+        if (work.type === "sonnet") {
+          // Sonnets have only one passage, navigate directly
+          navigate(`/passage/${passages[0].id}`);
+        } else {
+          // Plays have multiple passages, navigate to work page
+          navigate(`/work/${work.id}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching passages:", error);
     }
   };
 
