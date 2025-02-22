@@ -42,14 +42,14 @@ export default function Home() {
     <div className="container mx-auto p-6">
       <h1 className="text-4xl font-serif text-center mb-8">Shakespeare Reader</h1>
       <p className="text-center text-muted-foreground mb-8">
-        Hover over any word to see its definition
+        Click any word to see its definition
       </p>
-      
+
       <Tabs defaultValue={passages[0].id.toString()} className="max-w-3xl mx-auto">
         <TabsList className="w-full">
           {passages.map((passage) => (
-            <TabsTrigger 
-              key={passage.id} 
+            <TabsTrigger
+              key={passage.id}
               value={passage.id.toString()}
               className="flex-1"
             >
@@ -57,7 +57,7 @@ export default function Home() {
             </TabsTrigger>
           ))}
         </TabsList>
-        
+
         <ScrollArea className="h-[calc(100vh-300px)] mt-6">
           {passages.map((passage) => (
             <TabsContent key={passage.id} value={passage.id.toString()}>

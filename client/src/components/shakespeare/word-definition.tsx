@@ -14,20 +14,19 @@ interface WordProps {
 }
 
 export function Word({ word, className }: WordProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  const { data: definition, isLoading } = useQuery({
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { data: definition, isLoading } = useQuery<WordDefinition>({
     queryKey: [`/api/define/${word}`],
-    enabled: isHovered,
+    enabled: isOpen,
   });
 
   return (
     <TooltipProvider>
-      <Tooltip>
+      <Tooltip open={isOpen} onOpenChange={setIsOpen}>
         <TooltipTrigger 
-          className={`inline-block hover:text-primary cursor-help ${className}`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          className={`inline-block cursor-pointer hover:text-primary active:text-primary/80 ${className}`}
+          onClick={() => setIsOpen(true)}
         >
           {word}
         </TooltipTrigger>
