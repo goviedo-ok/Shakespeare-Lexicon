@@ -22,7 +22,7 @@ export function Word({ word, className }: WordProps) {
   });
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip open={isOpen} onOpenChange={setIsOpen}>
         <TooltipTrigger 
           className={`inline-block cursor-pointer hover:text-primary active:text-primary/80 ${className}`}
@@ -30,7 +30,13 @@ export function Word({ word, className }: WordProps) {
         >
           {word}
         </TooltipTrigger>
-        <TooltipContent className="max-w-sm">
+        <TooltipContent 
+          side="top" 
+          align="center"
+          sideOffset={5}
+          className="max-w-sm"
+          avoidCollisions
+        >
           {isLoading ? (
             <p>Loading definition...</p>
           ) : definition ? (
