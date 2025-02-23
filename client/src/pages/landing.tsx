@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from "lucide-react";
-import type { Work } from "@shared/schema";
+import type { Work, Passage } from "@shared/schema";
 import { queryClient } from "@/lib/queryClient";
 
 export default function Landing() {
@@ -34,7 +34,8 @@ export default function Landing() {
 
   const handleWorkSelect = async (work: Work) => {
     try {
-      const { data: passages } = await queryClient.fetchQuery({
+      // Use proper typing for the query response
+      const passages = await queryClient.fetchQuery<Passage[]>({
         queryKey: [`/api/works/${work.id}/passages`],
       });
 
