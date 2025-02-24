@@ -8,13 +8,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Start the Python lexicon service
-const pythonProcess = spawn("python", ["server/shakespeare-lexicon.py"], {
+// Start the Python Shakespeare server
+const pythonProcess = spawn("python", ["server/shakespeare-server.py"], {
   stdio: "inherit"
 });
 
 pythonProcess.on("error", (err) => {
-  console.error("Failed to start Python lexicon service:", err);
+  console.error("Failed to start Python Shakespeare server:", err);
 });
 
 app.use((req, res, next) => {
