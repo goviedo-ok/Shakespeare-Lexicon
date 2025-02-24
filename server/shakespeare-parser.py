@@ -1,14 +1,28 @@
+def safe_int(value):
+    """Safely convert a string to int, handling special cases."""
+    if not value:
+        return 0
+    value = value.lower()
+    if value == 'prologue':
+        return 0
+    if value == 'epilogue':
+        return 99
+    try:
+        return int(value)
+    except ValueError:
+        return 0
+
+import re
 from bs4 import BeautifulSoup
 import json
 import os
-import re
 
 def load_xml(file_path):
     """Loads and parses the XML file using BeautifulSoup with lxml."""
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
-        return BeautifulSoup(content, "lxml-xml")
+        return BeautifulSoup(content, "lxml-xml")  # Use lxml-xml for better parsing 
     except FileNotFoundError:
         print(f"File not found: {file_path}")
         return None
@@ -30,11 +44,14 @@ def parse_sonnet(sonnet_div):
 
 def get_xml_format(soup):
     """Detect the XML format type based on structure."""
-    # Check if it uses the first format (like Hamlet)
-    first_speech = soup.find('sp')
-    if first_speech and first_speech.find('speaker') and first_speech.find('l'):
+    # Format 1 uses sp/speaker/l tags (like Hamlet)
+    if soup.find('sp') and soup.find('speaker'):
         return "format1"
-    return "format2"
+    # Format 2 uses speech/speaker1/line tags
+    elif soup.find('speech') and soup.find('speaker1'):
+        return "format2"
+    # Default to format1 if we can't definitively determine
+    return "format1"
 
 def parse_scene_format1(scene_div):
     """Parse scene content for format 1 (like Hamlet)."""
@@ -67,20 +84,14 @@ def parse_scene_format1(scene_div):
             else:
                 lines.append(text)
         elif elem.name == 'stage':
-            stage_text = f"[{elem.get_text(strip=True)}]"
+            stage_text = f"[{stage.get_text(strip=True)}]"
             if current_speaker:
                 current_speech.append(stage_text)
             else:
                 lines.append(stage_text)
 
-    # First process stage directions at scene level
-    for stage in scene_div.find_all('stage', recursive=False):
-        lines.append(f"[{stage.get_text(strip=True)}]")
-
-    # Process speeches and other elements
-    for elem in scene_div.children:
-        if isinstance(elem, str):
-            continue
+    # Process all speeches and other elements
+    for elem in scene_div.find_all(['sp', 'stage', 'l'], recursive=False):
         if elem.name == 'sp':
             for child in elem.children:
                 if isinstance(child, str):
@@ -90,11 +101,8 @@ def parse_scene_format1(scene_div):
                 lines.append(f"{current_speaker}: {' '.join(current_speech)}")
                 current_speaker = None
                 current_speech = []
-        elif elem.name in ['l', 'stage']:
+        else:
             process_element(elem)
-
-    if current_speaker and current_speech:
-        lines.append(f"{current_speaker}: {' '.join(current_speech)}")
 
     content = '\n'.join(line for line in lines if line.strip())
     return content if content.strip() else None
@@ -108,14 +116,14 @@ def parse_scene_format2(scene_div):
         lines.append(f"[{stage.get_text(strip=True)}]")
 
     # Handle dialogue sections
-    for speech in scene_div.find_all(['sp', 'speech']):
-        speaker = speech.find(['speaker', 'speaker1'])
+    for speech in scene_div.find_all('speech'):
+        speaker = speech.find('speaker1')
         if speaker:
             speaker_text = speaker.get_text(strip=True)
             speech_lines = []
 
             # Collect all lines in the speech
-            for line in speech.find_all(['l', 'line']):
+            for line in speech.find_all('line'):
                 text = line.get_text(strip=True)
                 if text:
                     speech_lines.append(text)
@@ -124,7 +132,7 @@ def parse_scene_format2(scene_div):
                 lines.append(f"{speaker_text}: {' '.join(speech_lines)}")
 
     # Handle standalone lines
-    for line in scene_div.find_all(['l', 'line'], recursive=False):
+    for line in scene_div.find_all('line', recursive=False):
         text = line.get_text(strip=True)
         if text:
             lines.append(text)
@@ -132,16 +140,15 @@ def parse_scene_format2(scene_div):
     content = '\n'.join(line for line in lines if line.strip())
     return content if content.strip() else None
 
-def parse_scene(scene_div):
-    """Parse a single scene using the appropriate format."""
-    # Try format 1 first
-    content = parse_scene_format1(scene_div)
-    if content:
-        return content
+def parse_scene(scene_div, format_type):
+    """Parse a single scene using the specified format."""
+    if format_type == "format2":
+        content = parse_scene_format2(scene_div)
+        if content:
+            return content
 
-    # If format 1 yields no content, try format 2
-    return parse_scene_format2(scene_div)
-
+    # Try format1 as fallback
+    return parse_scene_format1(scene_div)
 
 def parse_play(soup):
     """Parse a play and return its structure with acts and scenes."""
@@ -155,8 +162,12 @@ def parse_play(soup):
 
     title = title.get_text(strip=True)
     print(f"Parsing play: {title}")
-    acts = []
 
+    # Detect format for this play
+    format_type = get_xml_format(soup)
+    print(f"Detected format: {format_type}")
+
+    acts = []
     for act_div in soup.find_all('div1', type='act'):
         act_num = act_div.get('n', '')
         if act_num == 'cast':  # Skip cast list
@@ -169,7 +180,7 @@ def parse_play(soup):
             print(f"Parsing scene {scene_num}")
 
             try:
-                content = parse_scene(scene_div)
+                content = parse_scene(scene_div, format_type)
                 if content:  # Only add scene if we have valid content
                     scenes.append({
                         'number': scene_num,
@@ -194,18 +205,6 @@ def parse_play(soup):
         'acts': acts
     }
 
-def get_play_year(file_content):
-    """Extract the approximate year from play metadata or return default."""
-    # This is a simplified approach - in real data we'd want more sophisticated dating
-    year_match = re.search(r'\b(15|16)\d{2}\b', file_content)
-    return int(year_match.group()) if year_match else 1600
-
-def parse_play_file(file_path):
-    """Parse a play XML file and return the play structure."""
-    soup = load_xml(file_path)
-    if not soup:
-        return None
-    return parse_play(soup)
 
 def parse_sonnets_file(file_path):
     """Parse the sonnets XML file and return all sonnets."""
@@ -227,19 +226,19 @@ def is_play_file(filename):
             filename != 'son.xml' and  # Not sonnets
             filename != 'schmidt.xml')  # Not lexicon
 
-def safe_int(value):
-    """Safely convert a string to int, handling special cases."""
-    if not value:
-        return 0
-    value = value.lower()
-    if value == 'prologue':
-        return 0
-    if value == 'epilogue':
-        return 99
-    try:
-        return int(value)
-    except ValueError:
-        return 0
+def get_play_year(file_content):
+    """Extract the approximate year from play metadata or return default."""
+    # This is a simplified approach - in real data we'd want more sophisticated dating
+    year_match = re.search(r'\b(15|16)\d{2}\b', file_content)
+    return int(year_match.group()) if year_match else 1600
+
+def parse_play_file(file_path):
+    """Parse a play XML file and return the play structure."""
+    soup = load_xml(file_path)
+    if not soup:
+        return None
+    return parse_play(soup)
+
 
 def generate_works_data():
     """Generate the full works data from XML files."""
