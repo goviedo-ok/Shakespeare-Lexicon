@@ -44,120 +44,147 @@ const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
   textNodeName: "#text",
-  preserveOrder: true
+  isArray: (name) => ['DIV1', 'DIV2', 'l', 'sp', 'stage', 'speaker'].includes(name),
+  preserveOrder: false,
+  parseAttributeValue: true,
+  trimValues: true
 });
 
 function parseSonnet(sonnetDiv: any): { title: string; content: string } | null {
-  const number = sonnetDiv['@_n'];
-  if (number === 'dedication') return null;
+  try {
+    const number = sonnetDiv['@_n'];
+    if (number === 'dedication') return null;
 
-  const lines = sonnetDiv.l || [];
-  const content = lines.map((line: any) => line['#text']).join('\n');
+    const lines = sonnetDiv.l || [];
+    const content = lines
+      .filter((line: any) => line['#text'])
+      .map((line: any) => line['#text'].trim())
+      .join('\n');
 
-  return {
-    title: `Sonnet ${number}`,
-    content
-  };
+    return {
+      title: `Sonnet ${number}`,
+      content
+    };
+  } catch (error) {
+    console.error('Error parsing sonnet:', error);
+    return null;
+  }
 }
 
 function parseScene(sceneDiv: any): string | null {
-  const lines: string[] = [];
-  let currentSpeaker: string | null = null;
-  let currentSpeech: string[] = [];
+  try {
+    const lines: string[] = [];
+    let currentSpeaker: string | null = null;
+    let currentSpeech: string[] = [];
 
-  function addStageDirection(stage: any) {
-    if (stage) {
-      const stageText = `[${stage['#text']}]`;
-      if (currentSpeaker) {
-        currentSpeech.push(stageText);
-      } else {
-        lines.push(stageText);
-      }
-    }
-  }
-
-  function processSpeech(speech: any) {
-    if (speech.speaker) {
-      if (currentSpeaker && currentSpeech.length > 0) {
-        lines.push(`${currentSpeaker}: ${currentSpeech.join(' ')}`);
-      }
-      currentSpeaker = speech.speaker['#text'];
-      currentSpeech = [];
-    }
-
-    if (speech.l) {
-      const speechLines = Array.isArray(speech.l) ? speech.l : [speech.l];
-      speechLines.forEach((line: any) => {
-        const text = line['#text'];
-        if (currentSpeaker) {
-          currentSpeech.push(text);
-        } else {
-          lines.push(text);
+    // Process stage directions and speeches
+    if (Array.isArray(sceneDiv.stage)) {
+      sceneDiv.stage.forEach((stage: any) => {
+        if (stage['#text']) {
+          lines.push(`[${stage['#text'].trim()}]`);
         }
       });
     }
-  }
 
-  // Handle stage directions
-  if (sceneDiv.stage) {
-    const stages = Array.isArray(sceneDiv.stage) ? sceneDiv.stage : [sceneDiv.stage];
-    stages.forEach(addStageDirection);
-  }
+    if (Array.isArray(sceneDiv.sp)) {
+      sceneDiv.sp.forEach((speech: any) => {
+        // Handle speaker
+        if (speech.speaker && speech.speaker[0]?.['#text']) {
+          if (currentSpeaker && currentSpeech.length > 0) {
+            lines.push(`${currentSpeaker}: ${currentSpeech.join(' ')}`);
+            currentSpeech = [];
+          }
+          currentSpeaker = speech.speaker[0]['#text'].trim();
+        }
 
-  // Handle speeches
-  if (sceneDiv.sp) {
-    const speeches = Array.isArray(sceneDiv.sp) ? sceneDiv.sp : [sceneDiv.sp];
-    speeches.forEach(processSpeech);
-  }
+        // Handle lines
+        if (Array.isArray(speech.l)) {
+          speech.l.forEach((line: any) => {
+            if (line['#text']) {
+              const text = line['#text'].trim();
+              if (currentSpeaker) {
+                currentSpeech.push(text);
+              } else {
+                lines.push(text);
+              }
+            }
+          });
+        }
+      });
+    }
 
-  // Add any remaining speech
-  if (currentSpeaker && currentSpeech.length > 0) {
-    lines.push(`${currentSpeaker}: ${currentSpeech.join(' ')}`);
-  }
+    // Add any remaining speech
+    if (currentSpeaker && currentSpeech.length > 0) {
+      lines.push(`${currentSpeaker}: ${currentSpeech.join(' ')}`);
+    }
 
-  const content = lines.join('\n').trim();
-  return content || null;
+    const content = lines.join('\n').trim();
+    return content || null;
+  } catch (error) {
+    console.error('Error parsing scene:', error);
+    return null;
+  }
 }
 
 function parsePlay(xmlContent: string): { title: string; acts: any[] } | null {
-  const parsed = parser.parse(xmlContent);
-  const play = parsed.PLAY || parsed.play;
-  if (!play) return null;
+  try {
+    const parsed = parser.parse(xmlContent);
+    const play = parsed.PLAY || parsed.play;
+    if (!play) {
+      console.error('No play found in XML');
+      return null;
+    }
 
-  const title = play.TITLE?.[0]?.['#text'] || play.title?.[0]?.['#text'];
-  if (!title) return null;
+    // Find title
+    let title = '';
+    if (play.TITLE) {
+      title = Array.isArray(play.TITLE) ? play.TITLE[0]['#text'] : play.TITLE['#text'];
+    } else if (play.title) {
+      title = Array.isArray(play.title) ? play.title[0]['#text'] : play.title['#text'];
+    }
 
-  const acts = [];
-  const actDivs = play.ACT || play.act || [];
+    if (!title) {
+      console.error('No title found in play');
+      return null;
+    }
 
-  for (const actDiv of actDivs) {
-    const actNum = actDiv['@_n'];
-    if (actNum === 'cast') continue;
+    const acts = [];
+    const actElements = play.ACT || play.act || [];
+    const actArray = Array.isArray(actElements) ? actElements : [actElements];
 
-    const scenes = [];
-    const sceneDivs = actDiv.SCENE || actDiv.scene || [];
+    for (const actDiv of actArray) {
+      const actNum = actDiv['@_n'];
+      if (actNum === 'cast') continue;
 
-    for (const sceneDiv of sceneDivs) {
-      const sceneNum = sceneDiv['@_n'];
-      const content = parseScene(sceneDiv);
+      const scenes = [];
+      const sceneElements = actDiv.SCENE || actDiv.scene || [];
+      const sceneArray = Array.isArray(sceneElements) ? sceneElements : [sceneElements];
 
-      if (content) {
-        scenes.push({
-          number: sceneNum,
-          content
+      for (const sceneDiv of sceneArray) {
+        const sceneNum = sceneDiv['@_n'];
+        const content = parseScene(sceneDiv);
+
+        if (content) {
+          scenes.push({
+            number: sceneNum,
+            content
+          });
+        }
+      }
+
+      if (scenes.length > 0) {
+        acts.push({
+          number: actNum,
+          scenes
         });
       }
     }
 
-    if (scenes.length > 0) {
-      acts.push({
-        number: actNum,
-        scenes
-      });
-    }
+    return { title, acts };
+  } catch (error) {
+    console.error('Error parsing play:', error);
+    return null;
   }
-
-  return { title, acts };
 }
 
 // Load and parse all works
@@ -166,6 +193,8 @@ let passages: Passage[] = [];
 
 try {
   const assetsDir = join(__dirname, '..', 'attached_assets');
+  console.log('Loading Shakespeare works from:', assetsDir);
+
   const files = fs.readdirSync(assetsDir);
   let workId = 1;
   let passageId = 1;
@@ -173,6 +202,8 @@ try {
   // Process each XML file
   for (const filename of files) {
     if (!filename.endsWith('.xml')) continue;
+    console.log(`\nProcessing ${filename}...`);
+
     const filePath = join(assetsDir, filename);
     const content = fs.readFileSync(filePath, 'utf-8');
 
@@ -180,6 +211,7 @@ try {
     if (filename === 'son.xml') {
       const parsed = parser.parse(content);
       const sonnets = parsed.POEMS?.DIV1 || [];
+      console.log(`Found ${sonnets.length} sonnets`);
 
       for (const sonnet of sonnets) {
         const parsed = parseSonnet(sonnet);
@@ -214,8 +246,12 @@ try {
     // Handle plays
     try {
       const play = parsePlay(content);
-      if (!play) continue;
+      if (!play) {
+        console.error(`Failed to parse play from ${filename}`);
+        continue;
+      }
 
+      console.log(`Parsing play: ${play.title}`);
       const year = getPlayYear(content);
 
       shakespeareWorks.push({
@@ -232,6 +268,7 @@ try {
 
         for (const scene of act.scenes) {
           const sceneNumber = safeInt(scene.number);
+          console.log(`Adding scene ${scene.number} from act ${act.number} in ${play.title}`);
 
           passages.push({
             id: passageId,
@@ -246,13 +283,14 @@ try {
       }
 
       workId++;
+      console.log(`Successfully added ${play.title}`);
     } catch (error) {
       console.error(`Error processing play ${filename}:`, error);
       continue;
     }
   }
 
-  console.log(`Loaded ${shakespeareWorks.length} works and ${passages.length} passages directly from XML`);
+  console.log(`\nGenerated ${shakespeareWorks.length} works and ${passages.length} passages`);
 } catch (error) {
   console.error("Error loading Shakespeare data:", error);
 }
