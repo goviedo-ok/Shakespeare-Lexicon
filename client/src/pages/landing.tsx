@@ -53,30 +53,6 @@ export default function Landing() {
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      // Invalidate the works query to refresh the list
-      queryClient.invalidateQueries({ queryKey: ["/api/works"] });
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
-  };
-
   return (
     <div className="container mx-auto p-6">
       <div className="max-w-2xl mx-auto text-center mb-8">
@@ -96,22 +72,6 @@ export default function Landing() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-      </div>
-
-      <div className="max-w-xl mx-auto mb-8 text-center">
-        <Input
-          type="file"
-          accept=".xml"
-          id="file-upload"
-          className="hidden"
-          onChange={handleFileUpload}
-        />
-        <Button
-          variant="outline"
-          onClick={() => document.getElementById('file-upload')?.click()}
-        >
-          Upload New Shakespeare Work (XML)
-        </Button>
       </div>
 
       {isLoading ? (
