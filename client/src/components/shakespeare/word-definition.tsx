@@ -15,8 +15,12 @@ interface WordProps {
 export function Word({ word, className }: WordProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Remove trailing punctuation and make singular form
+  const cleanWord = word.replace(/[.,!?;:]/, "").toLowerCase();
+  const singularWord = cleanWord.endsWith('s') ? cleanWord.slice(0, -1) : cleanWord;
+
   const { data: definition, isLoading } = useQuery<WordDefinition>({
-    queryKey: [`/api/define/${word}`],
+    queryKey: [`/api/define/${singularWord}`],
     enabled: isOpen,
   });
 
@@ -28,7 +32,7 @@ export function Word({ word, className }: WordProps) {
         {word}
       </PopoverTrigger>
       <PopoverContent 
-        className="max-w-sm"
+        className="w-[450px] max-h-[300px] overflow-y-auto"
         align="center"
         side="top"
         sideOffset={5}
@@ -36,12 +40,14 @@ export function Word({ word, className }: WordProps) {
         {isLoading ? (
           <p>Loading definition...</p>
         ) : definition ? (
-          <div className="space-y-1">
-            <p className="font-bold">{definition.word}</p>
+          <div className="space-y-2">
+            <p className="font-bold text-lg">{definition.word}</p>
             <p className="text-sm italic text-muted-foreground">
               {definition.partOfSpeech}
             </p>
-            <p>{definition.definition}</p>
+            <div className="prose prose-sm dark:prose-invert">
+              <p className="whitespace-pre-wrap">{definition.definition}</p>
+            </div>
           </div>
         ) : (
           <p>No definition found</p>
