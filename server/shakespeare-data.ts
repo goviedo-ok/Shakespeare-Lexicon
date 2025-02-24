@@ -44,29 +44,38 @@ const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
   textNodeName: "#text",
-  isArray: (name) => ['DIV1', 'DIV2', 'l', 'sp', 'stage', 'speaker'].includes(name),
+  isArray: (name) => ['div1', 'div2', 'l', 'sp', 'speaker', 'stage'].includes(name.toLowerCase()),
   preserveOrder: false,
   parseAttributeValue: true,
-  trimValues: true
+  trimValues: true,
+  allowBooleanAttributes: true,
+  ignoreDeclaration: true,
+  cdataPropName: "__cdata",
+  numberParseOptions: {
+    hex: true,
+    leadingZeros: false
+  }
 });
 
-function parseSonnet(sonnetDiv: any): { title: string; content: string } | null {
+function processSpeech(speech: any): string | null {
   try {
-    const number = sonnetDiv['@_n'];
-    if (number === 'dedication') return null;
+    const speaker = speech.speaker?.[0]?.['#text'] || speech.speaker?.['#text'];
+    if (!speaker) return null;
 
-    const lines = sonnetDiv.l || [];
-    const content = lines
-      .filter((line: any) => line['#text'])
-      .map((line: any) => line['#text'].trim())
-      .join('\n');
+    const lines = speech.l || [];
+    const textLines = lines
+      .map((line: any) => {
+        let text = line['#text']?.trim();
+        if (!text) return null;
+        if (line['@_part'] === 'Y' || line['@_part'] === 'I') text += ' ';
+        return text;
+      })
+      .filter(Boolean)
+      .join(' ');
 
-    return {
-      title: `Sonnet ${number}`,
-      content
-    };
+    return textLines ? `${speaker}: ${textLines}` : null;
   } catch (error) {
-    console.error('Error parsing sonnet:', error);
+    console.error('Error processing speech:', error);
     return null;
   }
 }
@@ -74,48 +83,32 @@ function parseSonnet(sonnetDiv: any): { title: string; content: string } | null 
 function parseScene(sceneDiv: any): string | null {
   try {
     const lines: string[] = [];
-    let currentSpeaker: string | null = null;
-    let currentSpeech: string[] = [];
 
-    // Process stage directions and speeches
-    if (Array.isArray(sceneDiv.stage)) {
-      sceneDiv.stage.forEach((stage: any) => {
-        if (stage['#text']) {
-          lines.push(`[${stage['#text'].trim()}]`);
-        }
+    // Handle stage directions
+    if (sceneDiv.stage) {
+      const stages = Array.isArray(sceneDiv.stage) ? sceneDiv.stage : [sceneDiv.stage];
+      stages.forEach((stage: any) => {
+        const stageText = stage['#text']?.trim();
+        if (stageText) lines.push(`[${stageText}]`);
       });
     }
 
-    if (Array.isArray(sceneDiv.sp)) {
-      sceneDiv.sp.forEach((speech: any) => {
-        // Handle speaker
-        if (speech.speaker && speech.speaker[0]?.['#text']) {
-          if (currentSpeaker && currentSpeech.length > 0) {
-            lines.push(`${currentSpeaker}: ${currentSpeech.join(' ')}`);
-            currentSpeech = [];
-          }
-          currentSpeaker = speech.speaker[0]['#text'].trim();
-        }
+    // Handle speeches
+    if (sceneDiv.sp) {
+      const speeches = Array.isArray(sceneDiv.sp) ? sceneDiv.sp : [sceneDiv.sp];
+      speeches.forEach((speech: any) => {
+        const processedSpeech = processSpeech(speech);
+        if (processedSpeech) lines.push(processedSpeech);
 
-        // Handle lines
-        if (Array.isArray(speech.l)) {
-          speech.l.forEach((line: any) => {
-            if (line['#text']) {
-              const text = line['#text'].trim();
-              if (currentSpeaker) {
-                currentSpeech.push(text);
-              } else {
-                lines.push(text);
-              }
-            }
+        // Handle stage directions within speech
+        if (speech.stage) {
+          const stages = Array.isArray(speech.stage) ? speech.stage : [speech.stage];
+          stages.forEach((stage: any) => {
+            const stageText = stage['#text']?.trim();
+            if (stageText) lines.push(`[${stageText}]`);
           });
         }
       });
-    }
-
-    // Add any remaining speech
-    if (currentSpeaker && currentSpeech.length > 0) {
-      lines.push(`${currentSpeaker}: ${currentSpeech.join(' ')}`);
     }
 
     const content = lines.join('\n').trim();
@@ -129,44 +122,36 @@ function parseScene(sceneDiv: any): string | null {
 function parsePlay(xmlContent: string): { title: string; acts: any[] } | null {
   try {
     const parsed = parser.parse(xmlContent);
-    const play = parsed.PLAY || parsed.play;
-    if (!play) {
-      console.error('No play found in XML');
+    const root = parsed['TEI.2'] || parsed.TEI;
+    if (!root) {
+      console.error('Invalid TEI document structure');
       return null;
     }
 
-    // Find title
-    let title = '';
-    if (play.TITLE) {
-      title = Array.isArray(play.TITLE) ? play.TITLE[0]['#text'] : play.TITLE['#text'];
-    } else if (play.title) {
-      title = Array.isArray(play.title) ? play.title[0]['#text'] : play.title['#text'];
-    }
-
+    const titleStmt = root.teiHeader?.fileDesc?.titleStmt;
+    const title = titleStmt?.title?.[0]?.['#text'] || titleStmt?.title?.['#text'];
     if (!title) {
       console.error('No title found in play');
       return null;
     }
 
     const acts = [];
-    const actElements = play.ACT || play.act || [];
-    const actArray = Array.isArray(actElements) ? actElements : [actElements];
+    const actDivs = (root.text?.body?.div1 || [])
+      .filter((div: any) => div['@_type']?.toLowerCase() === 'act');
 
-    for (const actDiv of actArray) {
+    for (const actDiv of actDivs) {
       const actNum = actDiv['@_n'];
       if (actNum === 'cast') continue;
 
       const scenes = [];
-      const sceneElements = actDiv.SCENE || actDiv.scene || [];
-      const sceneArray = Array.isArray(sceneElements) ? sceneElements : [sceneElements];
+      const sceneDivs = (actDiv.div2 || [])
+        .filter((div: any) => div['@_type']?.toLowerCase() === 'scene');
 
-      for (const sceneDiv of sceneArray) {
-        const sceneNum = sceneDiv['@_n'];
+      for (const sceneDiv of sceneDivs) {
         const content = parseScene(sceneDiv);
-
         if (content) {
           scenes.push({
-            number: sceneNum,
+            number: sceneDiv['@_n'],
             content
           });
         }
@@ -180,7 +165,7 @@ function parsePlay(xmlContent: string): { title: string; acts: any[] } | null {
       }
     }
 
-    return { title, acts };
+    return acts.length > 0 ? { title, acts } : null;
   } catch (error) {
     console.error('Error parsing play:', error);
     return null;
@@ -199,7 +184,6 @@ try {
   let workId = 1;
   let passageId = 1;
 
-  // Process each XML file
   for (const filename of files) {
     if (!filename.endsWith('.xml')) continue;
     console.log(`\nProcessing ${filename}...`);
@@ -209,38 +193,49 @@ try {
 
     // Handle sonnets
     if (filename === 'son.xml') {
-      const parsed = parser.parse(content);
-      const sonnets = parsed.POEMS?.DIV1 || [];
-      console.log(`Found ${sonnets.length} sonnets`);
+      try {
+        const parsed = parser.parse(content);
+        const sonnets = (parsed.POEMS?.div1 || [])
+          .filter((div: any) => div['@_type'] === 'sonnet' && div['@_n'] !== 'dedication');
 
-      for (const sonnet of sonnets) {
-        const parsed = parseSonnet(sonnet);
-        if (parsed) {
-          shakespeareWorks.push({
-            id: workId,
-            title: parsed.title,
-            type: 'sonnet',
-            year: 1609,
-            description: parsed.content.slice(0, 50) + '...'
-          });
+        console.log(`Found ${sonnets.length} sonnets`);
 
-          passages.push({
-            id: passageId,
-            workId,
-            title: parsed.title,
-            content: parsed.content,
-            act: null,
-            scene: null
-          });
+        for (const sonnet of sonnets) {
+          const lines = (sonnet.l || [])
+            .map((line: any) => line['#text']?.trim())
+            .filter(Boolean)
+            .join('\n');
 
-          workId++;
-          passageId++;
+          if (lines) {
+            const title = `Sonnet ${sonnet['@_n']}`;
+            shakespeareWorks.push({
+              id: workId,
+              title,
+              type: 'sonnet',
+              year: 1609,
+              description: lines.slice(0, 50) + '...'
+            });
+
+            passages.push({
+              id: passageId,
+              workId,
+              title,
+              content: lines,
+              act: null,
+              scene: null
+            });
+
+            workId++;
+            passageId++;
+          }
         }
+      } catch (error) {
+        console.error('Error processing sonnets:', error);
       }
       continue;
     }
 
-    // Skip non-play files
+    // Skip lexicon file
     if (filename === 'schmidt.xml') continue;
 
     // Handle plays
@@ -265,7 +260,6 @@ try {
       // Add passages for each scene
       for (const act of play.acts) {
         const actNumber = safeInt(act.number);
-
         for (const scene of act.scenes) {
           const sceneNumber = safeInt(scene.number);
           console.log(`Adding scene ${scene.number} from act ${act.number} in ${play.title}`);
