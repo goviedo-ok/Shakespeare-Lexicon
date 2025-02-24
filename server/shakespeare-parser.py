@@ -142,34 +142,55 @@ def generate_works_data():
             continue
 
         # Handle plays
-        play = parse_play_file(file_path)
-        if play:
-            # Get play year from file content or use default
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            year = get_play_year(content)
+        try:
+            play = parse_play_file(file_path)
+            if play:
+                # Get play year from file content or use default
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                year = get_play_year(content)
 
-            works.append({
-                'id': work_id,
-                'title': play['title'],
-                'type': 'play',
-                'year': year,
-                'description': f"A {year} play by William Shakespeare"
-            })
+                works.append({
+                    'id': work_id,
+                    'title': play['title'],
+                    'type': 'play',
+                    'year': year,
+                    'description': f"A {year} play by William Shakespeare"
+                })
 
-            # Add passages for each scene
-            for act in play['acts']:
-                for scene in act['scenes']:
-                    passages.append({
-                        'id': passage_id,
-                        'workId': work_id,
-                        'title': f"Act {act['number']}, Scene {scene['number']}",
-                        'content': scene['content'],
-                        'act': int(act['number']),
-                        'scene': int(scene['number'])
-                    })
-                    passage_id += 1
-            work_id += 1
+                # Add passages for each scene
+                for act in play['acts']:
+                    try:
+                        act_number = int(act['number'])
+                    except ValueError:
+                        print(f"Warning: Non-numeric act number '{act['number']}' in {filename}")
+                        continue
+
+                    for scene in act['scenes']:
+                        try:
+                            # Handle special scene numbers like 'prologue'
+                            if scene['number'].lower() == 'prologue':
+                                scene_number = 0
+                            else:
+                                scene_number = int(scene['number'])
+
+                            passages.append({
+                                'id': passage_id,
+                                'workId': work_id,
+                                'title': f"Act {act['number']}, Scene {scene['number']}",
+                                'content': scene['content'],
+                                'act': act_number,
+                                'scene': scene_number
+                            })
+                            passage_id += 1
+                        except ValueError as e:
+                            print(f"Warning: Skipping scene with invalid number '{scene['number']}' in {filename}")
+                            continue
+
+                work_id += 1
+        except Exception as e:
+            print(f"Error processing {filename}: {str(e)}")
+            continue
 
     # Write to JSON files
     output_works = os.path.join(script_dir, 'shakespeare-works.json')
