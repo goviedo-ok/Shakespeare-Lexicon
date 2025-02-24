@@ -1,11 +1,22 @@
 from bs4 import BeautifulSoup
 import json
 import os
+import re
+
+def load_xml(file_path):
+    """Loads and parses the XML file using BeautifulSoup with lxml."""
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            content = file.read()
+        return BeautifulSoup(content, "lxml-xml")
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        return None
 
 def parse_sonnet(sonnet_div):
     """Parse a single sonnet div and return its content."""
     number = sonnet_div.get('n', '')
-    if number == 'dedication': # Skip dedication
+    if number == 'dedication':  # Skip dedication
         return None
 
     lines = sonnet_div.find_all('l')
@@ -60,10 +71,24 @@ def parse_play(soup):
         'acts': acts
     }
 
-def parse_sonnets(file_path):
+def get_play_year(file_content):
+    """Extract the approximate year from play metadata or return default."""
+    # This is a simplified approach - in real data we'd want more sophisticated dating
+    year_match = re.search(r'\b(15|16)\d{2}\b', file_content)
+    return int(year_match.group()) if year_match else 1600
+
+def parse_play_file(file_path):
+    """Parse a play XML file and return the play structure."""
+    soup = load_xml(file_path)
+    if not soup:
+        return None
+    return parse_play(soup)
+
+def parse_sonnets_file(file_path):
     """Parse the sonnets XML file and return all sonnets."""
-    with open(file_path, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f.read(), 'lxml-xml')
+    soup = load_xml(file_path)
+    if not soup:
+        return []
 
     sonnets = []
     for div in soup.find_all('div1', type='sonnet'):
@@ -73,73 +98,78 @@ def parse_sonnets(file_path):
 
     return sonnets
 
-def parse_play_file(file_path):
-    """Parse a play XML file and return the play structure."""
-    with open(file_path, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f.read(), 'lxml-xml')
-
-    return parse_play(soup)
-
 def generate_works_data():
     """Generate the full works data from XML files."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    print(f"Script directory: {script_dir}")
+    assets_dir = os.path.join(script_dir, '..', 'attached_assets')
+    print(f"Loading Shakespeare works from: {assets_dir}")
 
-    # Parse Hamlet
-    hamlet = parse_play_file(os.path.join(script_dir, '..', 'attached_assets', 'ham.xml'))
-
-    # Parse Sonnets
-    sonnets = parse_sonnets(os.path.join(script_dir, '..', 'attached_assets', 'son.xml'))
-
-    # Generate works data
     works = []
     passages = []
-
-    # Add Hamlet
-    hamlet_id = 1
-    works.append({
-        'id': hamlet_id,
-        'title': 'Hamlet',
-        'type': 'play',
-        'year': 1603,
-        'description': 'The tragedy of the Prince of Denmark'
-    })
-
-    # Add Hamlet's passages (one per scene)
+    work_id = 1
     passage_id = 1
-    for act in hamlet['acts']:
-        for scene in act['scenes']:
-            passages.append({
-                'id': passage_id,
-                'workId': hamlet_id,
-                'title': f"Act {act['number']}, Scene {scene['number']}",
-                'content': scene['content'],
-                'act': int(act['number']),
-                'scene': int(scene['number'])
+
+    # Process all XML files in the assets directory
+    for filename in os.listdir(assets_dir):
+        if not filename.endswith('.xml'):
+            continue
+
+        file_path = os.path.join(assets_dir, filename)
+        print(f"Processing {filename}...")
+
+        # Handle sonnets
+        if filename == 'son.xml':
+            sonnets = parse_sonnets_file(file_path)
+            for sonnet in sonnets:
+                works.append({
+                    'id': work_id,
+                    'title': sonnet['title'],
+                    'type': 'sonnet',
+                    'year': 1609,  # Sonnets were published in 1609
+                    'description': sonnet['content'][:50] + '...'
+                })
+
+                passages.append({
+                    'id': passage_id,
+                    'workId': work_id,
+                    'title': sonnet['title'],
+                    'content': sonnet['content'],
+                    'act': None,
+                    'scene': None
+                })
+                work_id += 1
+                passage_id += 1
+            continue
+
+        # Handle plays
+        play = parse_play_file(file_path)
+        if play:
+            # Get play year from file content or use default
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            year = get_play_year(content)
+
+            works.append({
+                'id': work_id,
+                'title': play['title'],
+                'type': 'play',
+                'year': year,
+                'description': f"A {year} play by William Shakespeare"
             })
-            passage_id += 1
 
-    # Add Sonnets
-    for sonnet in sonnets:
-        work_id = len(works) + 1
-        works.append({
-            'id': work_id,
-            'title': sonnet['title'],
-            'type': 'sonnet',
-            'year': 1609,
-            'description': sonnet['content'][:50] + '...'  # First 50 chars as description
-        })
-
-        # Add sonnet passage
-        passages.append({
-            'id': passage_id,
-            'workId': work_id,
-            'title': sonnet['title'],
-            'content': sonnet['content'],
-            'act': None,
-            'scene': None
-        })
-        passage_id += 1
+            # Add passages for each scene
+            for act in play['acts']:
+                for scene in act['scenes']:
+                    passages.append({
+                        'id': passage_id,
+                        'workId': work_id,
+                        'title': f"Act {act['number']}, Scene {scene['number']}",
+                        'content': scene['content'],
+                        'act': int(act['number']),
+                        'scene': int(scene['number'])
+                    })
+                    passage_id += 1
+            work_id += 1
 
     # Write to JSON files
     output_works = os.path.join(script_dir, 'shakespeare-works.json')
