@@ -53,7 +53,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const word = req.params.word.toLowerCase();
       const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+        `http://localhost:3001/api/lexicon/${word}`
       );
 
       if (!response.ok) {
@@ -61,13 +61,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return;
       }
 
-      const data = await response.json();
-      const definition = {
-        word: data[0].word,
-        definition: data[0].meanings[0].definitions[0].definition,
-        partOfSpeech: data[0].meanings[0].partOfSpeech
-      };
-
+      const definition = await response.json();
       res.json(definition);
     } catch (error) {
       res.status(500).json({ message: "Error fetching definition" });

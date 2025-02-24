@@ -1,70 +1,60 @@
-import { loadWorkFromXML, loadLexiconFromXML } from './xml-parser';
-import path from 'path';
-import fs from 'fs/promises';
-
-// Defining types for Work and Passage.  These are inferred from the original code.  Adjust if necessary.
-interface Work {
-  id: number;
-  title: string;
-  type: string;
-  year: number;
-  description: string;
-}
-
-interface Passage {
-  id: number;
-  workId: number;
-  title: string;
-  content: string;
-  act: number | null;
-  scene: number | null;
-}
-
-
-// These will be populated when loaded
-export let shakespeareWorks: Work[] = [];
-export let passages: Passage[] = [];
-export let lexicon: Record<string, string> = {};
-
-export async function loadData() {
-  try {
-    // Adjust these paths to where you'll store your XML files
-    const xmlDir = path.join(__dirname, '../data');
-
-    // Load works
-    const worksDir = path.join(xmlDir, 'works');
-    console.log('Looking for works in:', worksDir);
-    
-    const workFiles = await fs.readdir(worksDir);
-    console.log('Found XML files:', workFiles);
-    
-    shakespeareWorks = await Promise.all(
-      workFiles
-        .filter(file => file.endsWith('.xml'))
-        .map(async file => {
-          try {
-            console.log('Loading work from:', file);
-            const work = await loadWorkFromXML(path.join(worksDir, file));
-            console.log('Loaded work:', work);
-            return work;
-          } catch (error) {
-            console.error('Error loading work from', file, ':', error);
-            throw error;
-          }
-        })
-    );
-    console.log('All works loaded:', shakespeareWorks);
-
-    // Load passages -  This requires modification to the xml-parser to handle passages.  
-    //  Placeholder for now.  The implementation will depend on the XML structure.
-
-    // Load lexicon
-    lexicon = await loadLexiconFromXML(path.join(xmlDir, 'lexicon.xml'));
-  } catch (error) {
-    console.error('Error loading XML data:', error);
-    // Fallback to empty arrays if loading fails
-    shakespeareWorks = [];
-    passages = [];
-    lexicon = {};
+export const shakespeareWorks = [
+  {
+    id: 1,
+    title: "Hamlet",
+    type: "play",
+    year: 1603,
+    description: "The tragedy of the Prince of Denmark",
+  },
+  {
+    id: 2,
+    title: "Romeo and Juliet",
+    type: "play",
+    year: 1595,
+    description: "A tragic tale of two star-crossed lovers",
+  },
+  {
+    id: 3,
+    title: "Sonnet 18",
+    type: "sonnet",
+    year: 1609,
+    description: "Shall I compare thee to a summer's day?",
   }
-}
+];
+
+export const passages = [
+  {
+    id: 1,
+    workId: 1,
+    title: "To be, or not to be",
+    content: `To be, or not to be, that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take Arms against a Sea of troubles,
+And by opposing end them...`,
+    act: 3,
+    scene: 1
+  },
+  {
+    id: 2,
+    workId: 2,
+    title: "Romeo, Romeo",
+    content: `O Romeo, Romeo, wherefore art thou Romeo?
+Deny thy father and refuse thy name;
+Or if thou wilt not, be but sworn my love
+And I'll no longer be a Capulet.`,
+    act: 2,
+    scene: 2
+  },
+  {
+    id: 3,
+    workId: 3,
+    title: "Sonnet 18",
+    content: `Shall I compare thee to a summer's day?
+Thou art more lovely and more temperate:
+Rough winds do shake the darling buds of May,
+And summer's lease hath all too short a date...`,
+    act: null,
+    scene: null
+  }
+];
