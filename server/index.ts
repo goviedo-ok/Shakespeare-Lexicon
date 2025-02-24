@@ -8,21 +8,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Generate Shakespeare works data from XML files
-const parserProcess = spawn("python", ["server/shakespeare-parser.py"], {
-  stdio: "inherit"
-});
-
-parserProcess.on("error", (err) => {
-  console.error("Failed to run Shakespeare parser:", err);
-});
-
-parserProcess.on("exit", (code) => {
-  if (code !== 0) {
-    console.error("Shakespeare parser exited with code:", code);
-  }
-});
-
 // Start the Python lexicon service
 const pythonProcess = spawn("python", ["server/shakespeare-lexicon.py"], {
   stdio: "inherit"
@@ -91,12 +76,10 @@ app.use((req, res, next) => {
   // Cleanup on server shutdown
   process.on("exit", () => {
     pythonProcess.kill();
-    parserProcess.kill();
   });
 
   process.on("SIGTERM", () => {
     pythonProcess.kill();
-    parserProcess.kill();
     process.exit(0);
   });
 })();
