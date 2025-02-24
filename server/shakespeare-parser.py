@@ -12,17 +12,17 @@ def safe_int(value):
     except ValueError:
         return 0
 
-import re
 from bs4 import BeautifulSoup
 import json
 import os
+import re
 
 def load_xml(file_path):
     """Loads and parses the XML file using BeautifulSoup with lxml."""
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
-        return BeautifulSoup(content, "lxml-xml")  # Use lxml-xml for better parsing 
+        return BeautifulSoup(content, "lxml-xml")  # Use lxml-xml for better parsing
     except FileNotFoundError:
         print(f"File not found: {file_path}")
         return None
@@ -67,6 +67,15 @@ def parse_scene_format1(scene_div):
             return text + ' '
         return text
 
+    def add_stage_direction(stage_elem):
+        """Add a stage direction to current speech or lines."""
+        if stage_elem:
+            stage_text = f"[{stage_elem.get_text(strip=True)}]"
+            if current_speaker:
+                current_speech.append(stage_text)
+            else:
+                lines.append(stage_text)
+
     def process_element(elem):
         nonlocal current_speaker, current_speech
         if elem.name == 'speaker':
@@ -84,14 +93,14 @@ def parse_scene_format1(scene_div):
             else:
                 lines.append(text)
         elif elem.name == 'stage':
-            stage_text = f"[{stage.get_text(strip=True)}]"
-            if current_speaker:
-                current_speech.append(stage_text)
-            else:
-                lines.append(stage_text)
+            add_stage_direction(elem)
+
+    # First process stage directions at scene level
+    for stage in scene_div.find_all('stage', recursive=False):
+        add_stage_direction(stage)
 
     # Process all speeches and other elements
-    for elem in scene_div.find_all(['sp', 'stage', 'l'], recursive=False):
+    for elem in scene_div.find_all(['sp', 'l'], recursive=True):
         if elem.name == 'sp':
             for child in elem.children:
                 if isinstance(child, str):
@@ -103,6 +112,10 @@ def parse_scene_format1(scene_div):
                 current_speech = []
         else:
             process_element(elem)
+
+    # Add any remaining speech
+    if current_speaker and current_speech:
+        lines.append(f"{current_speaker}: {' '.join(current_speech)}")
 
     content = '\n'.join(line for line in lines if line.strip())
     return content if content.strip() else None
@@ -205,7 +218,6 @@ def parse_play(soup):
         'acts': acts
     }
 
-
 def parse_sonnets_file(file_path):
     """Parse the sonnets XML file and return all sonnets."""
     soup = load_xml(file_path)
@@ -238,7 +250,6 @@ def parse_play_file(file_path):
     if not soup:
         return None
     return parse_play(soup)
-
 
 def generate_works_data():
     """Generate the full works data from XML files."""
