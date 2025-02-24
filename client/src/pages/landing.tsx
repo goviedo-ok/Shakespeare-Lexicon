@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from "lucide-react";
-import type { Work, Passage } from "@shared/schema";
-import { queryClient } from "@/lib/queryClient";
+import type { Work } from "@shared/schema";
 
 export default function Landing() {
   const [, navigate] = useLocation();
@@ -32,24 +31,13 @@ export default function Landing() {
   const plays = works.filter(w => w.type === "play");
   const sonnets = works.filter(w => w.type === "sonnet");
 
-  const handleWorkSelect = async (work: Work) => {
-    try {
-      // Use proper typing for the query response
-      const passages = await queryClient.fetchQuery<Passage[]>({
-        queryKey: [`/api/works/${work.id}/passages`],
-      });
-
-      if (passages && passages.length > 0) {
-        if (work.type === "sonnet") {
-          // Sonnets have only one passage, navigate directly
-          navigate(`/passage/${passages[0].id}`);
-        } else {
-          // Plays have multiple passages, navigate to work page
-          navigate(`/work/${work.id}`);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching passages:", error);
+  const handleWorkSelect = (work: Work) => {
+    if (work.type === "sonnet") {
+      // For sonnets, navigate directly to passage/1 since they're single passages
+      navigate(`/passage/${work.id}`);
+    } else {
+      // For plays, navigate to the work page
+      navigate(`/work/${work.id}`);
     }
   };
 
