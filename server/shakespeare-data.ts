@@ -32,10 +32,28 @@ export async function loadData() {
     const xmlDir = path.join(__dirname, '../data');
 
     // Load works
-    const workFiles = await fs.readdir(path.join(xmlDir, 'works'));
+    const worksDir = path.join(xmlDir, 'works');
+    console.log('Looking for works in:', worksDir);
+    
+    const workFiles = await fs.readdir(worksDir);
+    console.log('Found XML files:', workFiles);
+    
     shakespeareWorks = await Promise.all(
-      workFiles.map(file => loadWorkFromXML(path.join(xmlDir, 'works', file)))
+      workFiles
+        .filter(file => file.endsWith('.xml'))
+        .map(async file => {
+          try {
+            console.log('Loading work from:', file);
+            const work = await loadWorkFromXML(path.join(worksDir, file));
+            console.log('Loaded work:', work);
+            return work;
+          } catch (error) {
+            console.error('Error loading work from', file, ':', error);
+            throw error;
+          }
+        })
     );
+    console.log('All works loaded:', shakespeareWorks);
 
     // Load passages -  This requires modification to the xml-parser to handle passages.  
     //  Placeholder for now.  The implementation will depend on the XML structure.
