@@ -31,48 +31,79 @@ def parse_sonnet(sonnet_div):
 def parse_scene(scene_div):
     """Parse a single scene and return its content."""
     lines = []
-    for elem in scene_div.children:
-        if elem.name == 'l':
-            # Handle direct lines
-            lines.append(elem.get_text(strip=True))
-        elif elem.name == 'sp':
-            # Handle character speeches
-            speaker = elem.find('speaker')
-            speech_lines = []
+    current_speech = []
+    current_speaker = None
 
-            # Get all text from speech, including stage directions
-            for content in elem.children:
-                if content.name == 'speaker':
-                    continue
-                elif content.name == 'l':
-                    # Handle partial lines
-                    if content.get('part'):
-                        part_type = content.get('part')
-                        line_text = content.get_text(strip=True)
-                        if part_type in ['I', 'Y']:  # Initial or middle part
-                            speech_lines.append(f"{line_text} ")
-                        else:  # Final part
-                            speech_lines.append(line_text)
-                    else:
-                        speech_lines.append(content.get_text(strip=True))
-                elif content.name == 'stage':
-                    # Include stage directions in brackets
-                    speech_lines.append(f"[{content.get_text(strip=True)}]")
+    def process_speech_part(part_elem):
+        """Process a speech part, handling line continuations."""
+        text = part_elem.get_text(strip=True)
+        part_type = part_elem.get('part', '')
 
-            if speaker and speech_lines:
-                speaker_text = speaker.get_text(strip=True)
-                speech_text = ' '.join(speech_lines)
-                # Remove extra spaces between words while preserving single spaces
-                speech_text = ' '.join(speech_text.split())
-                lines.append(f"{speaker_text}: {speech_text}")
+        # Add space after initial or middle parts
+        if part_type in ['I', 'Y']:
+            return text + ' '
+        return text
+
+    def process_element(elem):
+        nonlocal current_speaker, current_speech
+
+        if elem.name == 'speaker':
+            # If we have a previous speech, add it before starting new one
+            if current_speaker and current_speech:
+                lines.append(f"{current_speaker}: {' '.join(current_speech)}")
+            current_speaker = elem.get_text(strip=True)
+            current_speech = []
+        elif elem.name == 'l':
+            # Handle line elements
+            if elem.get('part'):
+                text = process_speech_part(elem)
+            else:
+                text = elem.get_text(strip=True)
+
+            if current_speaker:
+                current_speech.append(text)
+            else:
+                lines.append(text)
         elif elem.name == 'stage':
             # Handle stage directions
-            lines.append(f"[{elem.get_text(strip=True)}]")
+            stage_text = f"[{elem.get_text(strip=True)}]"
+            if current_speaker:
+                current_speech.append(stage_text)
+            else:
+                lines.append(stage_text)
 
+    # First process stage directions at scene level
+    for stage in scene_div.find_all('stage', recursive=False):
+        lines.append(f"[{stage.get_text(strip=True)}]")
+
+    # Then process all speeches and other elements
+    for elem in scene_div.children:
+        if isinstance(elem, str):
+            continue
+        if elem.name == 'sp':
+            # Process all elements within the speech
+            for child in elem.children:
+                if isinstance(child, str):
+                    continue
+                process_element(child)
+            # Add the speech if we have one pending
+            if current_speaker and current_speech:
+                lines.append(f"{current_speaker}: {' '.join(current_speech)}")
+                current_speaker = None
+                current_speech = []
+        elif elem.name in ['l', 'stage']:
+            process_element(elem)
+
+    # Add any remaining speech
+    if current_speaker and current_speech:
+        lines.append(f"{current_speaker}: {' '.join(current_speech)}")
+
+    # Join lines and clean up any extra whitespace
     content = '\n'.join(line for line in lines if line.strip())
     if not content.strip():
         print(f"Warning: Empty scene content detected")
         return None
+
     return content
 
 def parse_play(soup):
