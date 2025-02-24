@@ -28,8 +28,16 @@ def parse_sonnet(sonnet_div):
         'content': content
     }
 
-def parse_scene(scene_div):
-    """Parse a single scene and return its content."""
+def get_xml_format(soup):
+    """Detect the XML format type based on structure."""
+    # Check if it uses the first format (like Hamlet)
+    first_speech = soup.find('sp')
+    if first_speech and first_speech.find('speaker') and first_speech.find('l'):
+        return "format1"
+    return "format2"
+
+def parse_scene_format1(scene_div):
+    """Parse scene content for format 1 (like Hamlet)."""
     lines = []
     current_speech = []
     current_speaker = None
@@ -38,34 +46,27 @@ def parse_scene(scene_div):
         """Process a speech part, handling line continuations."""
         text = part_elem.get_text(strip=True)
         part_type = part_elem.get('part', '')
-
-        # Add space after initial or middle parts
         if part_type in ['I', 'Y']:
             return text + ' '
         return text
 
     def process_element(elem):
         nonlocal current_speaker, current_speech
-
         if elem.name == 'speaker':
-            # If we have a previous speech, add it before starting new one
             if current_speaker and current_speech:
                 lines.append(f"{current_speaker}: {' '.join(current_speech)}")
             current_speaker = elem.get_text(strip=True)
             current_speech = []
         elif elem.name == 'l':
-            # Handle line elements
             if elem.get('part'):
                 text = process_speech_part(elem)
             else:
                 text = elem.get_text(strip=True)
-
             if current_speaker:
                 current_speech.append(text)
             else:
                 lines.append(text)
         elif elem.name == 'stage':
-            # Handle stage directions
             stage_text = f"[{elem.get_text(strip=True)}]"
             if current_speaker:
                 current_speech.append(stage_text)
@@ -76,17 +77,15 @@ def parse_scene(scene_div):
     for stage in scene_div.find_all('stage', recursive=False):
         lines.append(f"[{stage.get_text(strip=True)}]")
 
-    # Then process all speeches and other elements
+    # Process speeches and other elements
     for elem in scene_div.children:
         if isinstance(elem, str):
             continue
         if elem.name == 'sp':
-            # Process all elements within the speech
             for child in elem.children:
                 if isinstance(child, str):
                     continue
                 process_element(child)
-            # Add the speech if we have one pending
             if current_speaker and current_speech:
                 lines.append(f"{current_speaker}: {' '.join(current_speech)}")
                 current_speaker = None
@@ -94,17 +93,55 @@ def parse_scene(scene_div):
         elif elem.name in ['l', 'stage']:
             process_element(elem)
 
-    # Add any remaining speech
     if current_speaker and current_speech:
         lines.append(f"{current_speaker}: {' '.join(current_speech)}")
 
-    # Join lines and clean up any extra whitespace
     content = '\n'.join(line for line in lines if line.strip())
-    if not content.strip():
-        print(f"Warning: Empty scene content detected")
-        return None
+    return content if content.strip() else None
 
-    return content
+def parse_scene_format2(scene_div):
+    """Parse scene content for format 2."""
+    lines = []
+
+    # Handle stage directions
+    for stage in scene_div.find_all('stage'):
+        lines.append(f"[{stage.get_text(strip=True)}]")
+
+    # Handle dialogue sections
+    for speech in scene_div.find_all(['sp', 'speech']):
+        speaker = speech.find(['speaker', 'speaker1'])
+        if speaker:
+            speaker_text = speaker.get_text(strip=True)
+            speech_lines = []
+
+            # Collect all lines in the speech
+            for line in speech.find_all(['l', 'line']):
+                text = line.get_text(strip=True)
+                if text:
+                    speech_lines.append(text)
+
+            if speech_lines:
+                lines.append(f"{speaker_text}: {' '.join(speech_lines)}")
+
+    # Handle standalone lines
+    for line in scene_div.find_all(['l', 'line'], recursive=False):
+        text = line.get_text(strip=True)
+        if text:
+            lines.append(text)
+
+    content = '\n'.join(line for line in lines if line.strip())
+    return content if content.strip() else None
+
+def parse_scene(scene_div):
+    """Parse a single scene using the appropriate format."""
+    # Try format 1 first
+    content = parse_scene_format1(scene_div)
+    if content:
+        return content
+
+    # If format 1 yields no content, try format 2
+    return parse_scene_format2(scene_div)
+
 
 def parse_play(soup):
     """Parse a play and return its structure with acts and scenes."""
