@@ -16,26 +16,30 @@ export async function loadWorkFromXML(filePath: string): Promise<Work> {
     console.log('Reading work file:', filePath);
     const result = parser.parse(xmlData);
     
-    // Get filename without extension (e.g., "ham" from "ham.xml")
     const baseId = path.basename(filePath, '.xml');
-    // Generate numeric ID from filename
     const id = parseInt(baseId) || Math.abs(baseId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
     
-    // Handle TEI.2 format used in Shakespeare plays
-    const fileDesc = result?.TEI?.teiHeader?.fileDesc || result?.['TEI.2']?.teiHeader?.fileDesc;
-    const title = fileDesc?.titleStmt?.title?._text || '';
-    const author = fileDesc?.titleStmt?.author?._text || 'William Shakespeare';
-    const sourceDesc = fileDesc?.sourceDesc?.biblStruct?.monogr;
-    
+    // Handle both TEI and TEI.2 formats
+    const header = result?.['TEI.2']?.teiHeader || result?.TEI?.teiHeader;
+    if (!header) {
+      throw new Error('No TEI header found in XML');
+    }
+
+    const fileDesc = header.fileDesc;
+    const title = fileDesc?.titleStmt?.title?._text;
+    if (!title) {
+      throw new Error('No title found in XML');
+    }
+
     const work: Work = {
       id,
       title,
-      type: 'play', // Since these are all plays for now
-      year: sourceDesc?.imprint?.date?._text || 1600,
-      description: `A play by ${author}, published by ${sourceDesc?.publisher?._text || 'unknown publisher'}`
+      type: 'play',
+      year: 1600, // Default year if not found
+      description: `A play by William Shakespeare`
     };
 
-    console.log('Loaded work:', work);
+    console.log('Successfully loaded work:', work);
     return work;
   } catch (error) {
     console.error('Error parsing work XML:', filePath, error);
