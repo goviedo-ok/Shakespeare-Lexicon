@@ -15,20 +15,27 @@ export async function loadWorkFromXML(filePath: string): Promise<Work> {
     const xmlData = await fs.readFile(filePath, 'utf-8');
     console.log('Reading work file:', filePath);
     const result = parser.parse(xmlData);
-    console.log('Parsed work XML:', JSON.stringify(result, null, 2));
-
-    // Extract work ID from filename
-    const id = parseInt(path.basename(filePath, '.xml'));
     
-    // Handle TEI format for plays/works
+    // Get filename without extension (e.g., "ham" from "ham.xml")
+    const baseId = path.basename(filePath, '.xml');
+    // Generate numeric ID from filename
+    const id = parseInt(baseId) || Math.abs(baseId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
+    
+    // Handle TEI.2 format used in Shakespeare plays
+    const fileDesc = result?.TEI?.teiHeader?.fileDesc || result?.['TEI.2']?.teiHeader?.fileDesc;
+    const title = fileDesc?.titleStmt?.title?._text || '';
+    const author = fileDesc?.titleStmt?.author?._text || 'William Shakespeare';
+    const sourceDesc = fileDesc?.sourceDesc?.biblStruct?.monogr;
+    
     const work: Work = {
       id,
-      title: result?.TEI?.teiHeader?.fileDesc?.titleStmt?.title?._text || path.basename(filePath, '.xml'),
-      type: result?.TEI?.teiHeader?.fileDesc?.sourceDesc?.biblStruct?.analytic?.title?._text === 'SONNETS' ? 'sonnet' : 'play',
-      year: result?.TEI?.teiHeader?.fileDesc?.sourceDesc?.biblStruct?.monogr?.imprint?.date?._text || 1600,
-      description: result?.TEI?.teiHeader?.fileDesc?.sourceDesc?.biblStruct?.monogr?.title?._text || ''
+      title,
+      type: 'play', // Since these are all plays for now
+      year: sourceDesc?.imprint?.date?._text || 1600,
+      description: `A play by ${author}, published by ${sourceDesc?.publisher?._text || 'unknown publisher'}`
     };
 
+    console.log('Loaded work:', work);
     return work;
   } catch (error) {
     console.error('Error parsing work XML:', filePath, error);
