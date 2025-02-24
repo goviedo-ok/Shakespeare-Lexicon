@@ -1,1087 +1,1164 @@
 [
   {
     "id": 1,
-    "title": "Hamlet",
-    "type": "play",
-    "year": 1603,
-    "description": "The tragedy of the Prince of Denmark"
-  },
-  {
-    "id": 2,
     "title": "Sonnet I",
     "type": "sonnet",
     "year": 1609,
     "description": "FROM fairest creatures we desire increase,\nThat th..."
   },
   {
-    "id": 3,
+    "id": 2,
     "title": "Sonnet II",
     "type": "sonnet",
     "year": 1609,
     "description": "When forty winters shall besiege thy brow,\nAnd dig..."
   },
   {
-    "id": 4,
+    "id": 3,
     "title": "Sonnet III",
     "type": "sonnet",
     "year": 1609,
     "description": "Look in thy glass, and tell the face thou viewest\n..."
   },
   {
-    "id": 5,
+    "id": 4,
     "title": "Sonnet IV",
     "type": "sonnet",
     "year": 1609,
     "description": "Unthrifty loveliness, why dost thou spend\nUpon thy..."
   },
   {
-    "id": 6,
+    "id": 5,
     "title": "Sonnet V",
     "type": "sonnet",
     "year": 1609,
     "description": "Those hours, that with gentle work did frame\nThe l..."
   },
   {
-    "id": 7,
+    "id": 6,
     "title": "Sonnet VI",
     "type": "sonnet",
     "year": 1609,
     "description": "Then let not winter's ragged hand deface\nIn thee t..."
   },
   {
-    "id": 8,
+    "id": 7,
     "title": "Sonnet VII",
     "type": "sonnet",
     "year": 1609,
     "description": "Lo! in the orient when the gracious light\nLifts up..."
   },
   {
-    "id": 9,
+    "id": 8,
     "title": "Sonnet VIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Music to hear, why hear'st thou music sadly?\nSweet..."
   },
   {
-    "id": 10,
+    "id": 9,
     "title": "Sonnet IX",
     "type": "sonnet",
     "year": 1609,
     "description": "Is it for fear to wet a widow's eye\nThat thou cons..."
   },
   {
-    "id": 11,
+    "id": 10,
     "title": "Sonnet X",
     "type": "sonnet",
     "year": 1609,
     "description": "For shame deny that thou bear'st love to any,\nWho ..."
   },
   {
-    "id": 12,
+    "id": 11,
     "title": "Sonnet XI",
     "type": "sonnet",
     "year": 1609,
     "description": "As fast as thou shalt wane, so fast thou growest\nI..."
   },
   {
-    "id": 13,
+    "id": 12,
     "title": "Sonnet XII",
     "type": "sonnet",
     "year": 1609,
     "description": "When I do count the clock that tells the time,\nAnd..."
   },
   {
-    "id": 14,
+    "id": 13,
     "title": "Sonnet XIII",
     "type": "sonnet",
     "year": 1609,
     "description": "O, that you were yourself! but, love, you are\nNo l..."
   },
   {
-    "id": 15,
+    "id": 14,
     "title": "Sonnet XIV",
     "type": "sonnet",
     "year": 1609,
     "description": "Not from the stars do I my judgement pluck;\nAnd ye..."
   },
   {
-    "id": 16,
+    "id": 15,
     "title": "Sonnet xv",
     "type": "sonnet",
     "year": 1609,
     "description": "When I consider every thing that grows\nHolds in pe..."
   },
   {
-    "id": 17,
+    "id": 16,
     "title": "Sonnet XVI",
     "type": "sonnet",
     "year": 1609,
     "description": "But wherefore do not you a mightier way\nMake war u..."
   },
   {
-    "id": 18,
+    "id": 17,
     "title": "Sonnet XVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Who will believe my verse in time to come,\nIf it w..."
   },
   {
-    "id": 19,
+    "id": 18,
     "title": "Sonnet XVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Shall I compare thee to a summer's day?\nThou art m..."
   },
   {
-    "id": 20,
+    "id": 19,
     "title": "Sonnet XIX",
     "type": "sonnet",
     "year": 1609,
     "description": "Devouring Time, blunt thou the lion's paws,\nAnd ma..."
   },
   {
-    "id": 21,
+    "id": 20,
     "title": "Sonnet XX",
     "type": "sonnet",
     "year": 1609,
     "description": "A woman's face with Nature's own hand painted\nHast..."
   },
   {
-    "id": 22,
+    "id": 21,
     "title": "Sonnet XXI",
     "type": "sonnet",
     "year": 1609,
     "description": "So is it not with me as with that Muse\nStirr'd by ..."
   },
   {
-    "id": 23,
+    "id": 22,
     "title": "Sonnet XXII",
     "type": "sonnet",
     "year": 1609,
     "description": "My glass shall not persuade me I am old,\nSo long a..."
   },
   {
-    "id": 24,
+    "id": 23,
     "title": "Sonnet XXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "As an unperfect actor on the stage\nWho with his fe..."
   },
   {
-    "id": 25,
+    "id": 24,
     "title": "Sonnet XXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "Mine eye hath play'd the painter and hath stell'd\n..."
   },
   {
-    "id": 26,
+    "id": 25,
     "title": "Sonnet XXV",
     "type": "sonnet",
     "year": 1609,
     "description": "Let those who are in favor with their stars\nOf pub..."
   },
   {
-    "id": 27,
+    "id": 26,
     "title": "Sonnet XXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Lord of my love, to whom in vassalage\nThy merit ha..."
   },
   {
-    "id": 28,
+    "id": 27,
     "title": "Sonnet XXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Weary with toil, I haste me to my bed,\nThe dear re..."
   },
   {
-    "id": 29,
+    "id": 28,
     "title": "Sonnet XXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "How can I then return in happy plight,\nThat am deb..."
   },
   {
-    "id": 30,
+    "id": 29,
     "title": "Sonnet XXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "When, in disgrace with fortune and men's eyes,\nI a..."
   },
   {
-    "id": 31,
+    "id": 30,
     "title": "Sonnet XXX",
     "type": "sonnet",
     "year": 1609,
     "description": "When to the sessions of sweet silent thought\nI sum..."
   },
   {
-    "id": 32,
+    "id": 31,
     "title": "Sonnet XXXI",
     "type": "sonnet",
     "year": 1609,
     "description": "Thy bosom is endeared with all hearts,\nWhich I by ..."
   },
   {
-    "id": 33,
+    "id": 32,
     "title": "Sonnet XXXII",
     "type": "sonnet",
     "year": 1609,
     "description": "If thou survive my well-contented day,\nWhen that c..."
   },
   {
-    "id": 34,
+    "id": 33,
     "title": "Sonnet XXXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Full many a glorious morning have I seen\nFlatter t..."
   },
   {
-    "id": 35,
+    "id": 34,
     "title": "Sonnet XXXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "Why didst thou promise such a beauteous day\nAnd ma..."
   },
   {
-    "id": 36,
+    "id": 35,
     "title": "Sonnet XXXV",
     "type": "sonnet",
     "year": 1609,
     "description": "No more be grieved at that which thou hast done:\nR..."
   },
   {
-    "id": 37,
+    "id": 36,
     "title": "Sonnet XXXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Let me confess that we two must be twain,\nAlthough..."
   },
   {
-    "id": 38,
+    "id": 37,
     "title": "Sonnet XXXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "As a decrepit father takes delight\nTo see his acti..."
   },
   {
-    "id": 39,
+    "id": 38,
     "title": "Sonnet XXXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "How can my Muse want subject to invent,\nWhile thou..."
   },
   {
-    "id": 40,
+    "id": 39,
     "title": "Sonnet XXXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "O, how thy worth with manners may I sing,\nWhen tho..."
   },
   {
-    "id": 41,
+    "id": 40,
     "title": "Sonnet XL",
     "type": "sonnet",
     "year": 1609,
     "description": "Take all my loves, my love, yea, take them all;\nWh..."
   },
   {
-    "id": 42,
+    "id": 41,
     "title": "Sonnet XLI",
     "type": "sonnet",
     "year": 1609,
     "description": "Those pretty wrongs that liberty commits,\nWhen I a..."
   },
   {
-    "id": 43,
+    "id": 42,
     "title": "Sonnet XLII",
     "type": "sonnet",
     "year": 1609,
     "description": "That thou hast her, it is not all my grief,\nAnd ye..."
   },
   {
-    "id": 44,
+    "id": 43,
     "title": "Sonnet XLIII",
     "type": "sonnet",
     "year": 1609,
     "description": "When most I wink, then do mine eyes best see,\nFor ..."
   },
   {
-    "id": 45,
+    "id": 44,
     "title": "Sonnet XLIV",
     "type": "sonnet",
     "year": 1609,
     "description": "If the dull substance of my flesh were thought,\nIn..."
   },
   {
-    "id": 46,
+    "id": 45,
     "title": "Sonnet XLV",
     "type": "sonnet",
     "year": 1609,
     "description": "The other two, slight air and purging fire,\nAre bo..."
   },
   {
-    "id": 47,
+    "id": 46,
     "title": "Sonnet XLVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Mine eye and heart are at a mortal war\nHow to divi..."
   },
   {
-    "id": 48,
+    "id": 47,
     "title": "Sonnet XLVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Betwixt mine eye and heart a league is took,\nAnd e..."
   },
   {
-    "id": 49,
+    "id": 48,
     "title": "Sonnet XLVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "How careful was I, when I took my way,\nEach trifle..."
   },
   {
-    "id": 50,
+    "id": 49,
     "title": "Sonnet XLIX",
     "type": "sonnet",
     "year": 1609,
     "description": "Against that time, if ever that time come,\nWhen I ..."
   },
   {
-    "id": 51,
+    "id": 50,
     "title": "Sonnet L",
     "type": "sonnet",
     "year": 1609,
     "description": "How heavy do I journey on the way,\nWhen what I see..."
   },
   {
-    "id": 52,
+    "id": 51,
     "title": "Sonnet LI",
     "type": "sonnet",
     "year": 1609,
     "description": "Thus can my love excuse the slow offence\nOf my dul..."
   },
   {
-    "id": 53,
+    "id": 52,
     "title": "Sonnet LII",
     "type": "sonnet",
     "year": 1609,
     "description": "So am I as the rich, whose blessed key\nCan bring h..."
   },
   {
-    "id": 54,
+    "id": 53,
     "title": "Sonnet LIII",
     "type": "sonnet",
     "year": 1609,
     "description": "What is your substance, whereof are you made,\nThat..."
   },
   {
-    "id": 55,
+    "id": 54,
     "title": "Sonnet LIV",
     "type": "sonnet",
     "year": 1609,
     "description": "O, how much more doth beauty beauteous seem\nBy tha..."
   },
   {
-    "id": 56,
+    "id": 55,
     "title": "Sonnet LV",
     "type": "sonnet",
     "year": 1609,
     "description": "Not marble, nor the gilded monuments\nOf princes, s..."
   },
   {
-    "id": 57,
+    "id": 56,
     "title": "Sonnet LVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Sweet love, renew thy force; be it not said\nThy ed..."
   },
   {
-    "id": 58,
+    "id": 57,
     "title": "Sonnet LVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Being your slave, what should I do but tend\nUpon t..."
   },
   {
-    "id": 59,
+    "id": 58,
     "title": "Sonnet LVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "That god forbid that made me first your slave,\nI s..."
   },
   {
-    "id": 60,
+    "id": 59,
     "title": "Sonnet LIX",
     "type": "sonnet",
     "year": 1609,
     "description": "If there be nothing new, but that which is\nHath be..."
   },
   {
-    "id": 61,
+    "id": 60,
     "title": "Sonnet LX",
     "type": "sonnet",
     "year": 1609,
     "description": "Like as the waves make towards the pebbled shore,\n..."
   },
   {
-    "id": 62,
+    "id": 61,
     "title": "Sonnet LXI",
     "type": "sonnet",
     "year": 1609,
     "description": "Is it thy will thy image should keep open\nMy heavy..."
   },
   {
-    "id": 63,
+    "id": 62,
     "title": "Sonnet LXII",
     "type": "sonnet",
     "year": 1609,
     "description": "Sin of self-love possesseth all mine eye\nAnd all m..."
   },
   {
-    "id": 64,
+    "id": 63,
     "title": "Sonnet LXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Against my love shall be, as I am now,\nWith Time's..."
   },
   {
-    "id": 65,
+    "id": 64,
     "title": "Sonnet LXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "When I have seen by Time's fell hand defaced\nThe r..."
   },
   {
-    "id": 66,
+    "id": 65,
     "title": "Sonnet LXV",
     "type": "sonnet",
     "year": 1609,
     "description": "Since brass, nor stone, nor earth, nor boundless s..."
   },
   {
-    "id": 67,
+    "id": 66,
     "title": "Sonnet LXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Tired with all these, for restful death I cry,\nAs,..."
   },
   {
-    "id": 68,
+    "id": 67,
     "title": "Sonnet LXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Ah! wherefore with infection should he live,\nAnd w..."
   },
   {
-    "id": 69,
+    "id": 68,
     "title": "Sonnet LXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Thus is his cheek the map of days outworn,\nWhen be..."
   },
   {
-    "id": 70,
+    "id": 69,
     "title": "Sonnet LXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "Those parts of thee that the world's eye doth view..."
   },
   {
-    "id": 71,
+    "id": 70,
     "title": "Sonnet LXX",
     "type": "sonnet",
     "year": 1609,
     "description": "That thou art blamed shall not be thy defect,\nFor ..."
   },
   {
-    "id": 72,
+    "id": 71,
     "title": "Sonnet LXXI",
     "type": "sonnet",
     "year": 1609,
     "description": "No longer mourn for me when I am dead\nThan you sha..."
   },
   {
-    "id": 73,
+    "id": 72,
     "title": "Sonnet LXXII",
     "type": "sonnet",
     "year": 1609,
     "description": "O, lest the world should task you to recite\nWhat m..."
   },
   {
-    "id": 74,
+    "id": 73,
     "title": "Sonnet LXXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "That time of year thou mayst in me behold\nWhen yel..."
   },
   {
-    "id": 75,
+    "id": 74,
     "title": "Sonnet LXXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "But be contented: when that fell arrest\nWithout al..."
   },
   {
-    "id": 76,
+    "id": 75,
     "title": "Sonnet LXXV",
     "type": "sonnet",
     "year": 1609,
     "description": "So are you to my thoughts as food to life,\nOr as s..."
   },
   {
-    "id": 77,
+    "id": 76,
     "title": "Sonnet LXXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Why is my verse so barren of new pride,\nSo far fro..."
   },
   {
-    "id": 78,
+    "id": 77,
     "title": "Sonnet LXXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Thy glass will show thee how thy beauties wear,\nTh..."
   },
   {
-    "id": 79,
+    "id": 78,
     "title": "Sonnet LXXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "So oft have I invoked thee for my Muse\nAnd found s..."
   },
   {
-    "id": 80,
+    "id": 79,
     "title": "Sonnet LXXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "Whilst I alone did call upon thy aid,\nMy verse alo..."
   },
   {
-    "id": 81,
+    "id": 80,
     "title": "Sonnet LXXX",
     "type": "sonnet",
     "year": 1609,
     "description": "O, how I faint when I of you do write,\nKnowing a b..."
   },
   {
-    "id": 82,
+    "id": 81,
     "title": "Sonnet LXXXI",
     "type": "sonnet",
     "year": 1609,
     "description": "Or I shall live your epitaph to make,\nOr you survi..."
   },
   {
-    "id": 83,
+    "id": 82,
     "title": "Sonnet LXXXII",
     "type": "sonnet",
     "year": 1609,
     "description": "I grant thou wert not married to my Muse\nAnd there..."
   },
   {
-    "id": 84,
+    "id": 83,
     "title": "Sonnet LXXXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "I never saw that you did painting need\nAnd therefo..."
   },
   {
-    "id": 85,
+    "id": 84,
     "title": "Sonnet LXXXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "Who is it that says most? which can say more\nThan ..."
   },
   {
-    "id": 86,
+    "id": 85,
     "title": "Sonnet LXXXV",
     "type": "sonnet",
     "year": 1609,
     "description": "My tongue-tied Muse in manners holds her still,\nWh..."
   },
   {
-    "id": 87,
+    "id": 86,
     "title": "Sonnet LXXXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Was it the proud full sail of his great verse,\nBou..."
   },
   {
-    "id": 88,
+    "id": 87,
     "title": "Sonnet LXXXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Farewell! thou art too dear for my possessing,\nAnd..."
   },
   {
-    "id": 89,
+    "id": 88,
     "title": "Sonnet LXXXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "When thou shalt be disposed to set me light\nAnd pl..."
   },
   {
-    "id": 90,
+    "id": 89,
     "title": "Sonnet LXXXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "Say that thou didst forsake me for some fault,\nAnd..."
   },
   {
-    "id": 91,
+    "id": 90,
     "title": "Sonnet XC",
     "type": "sonnet",
     "year": 1609,
     "description": "Then hate me when thou wilt; if ever, now;\nNow, wh..."
   },
   {
-    "id": 92,
+    "id": 91,
     "title": "Sonnet XCI",
     "type": "sonnet",
     "year": 1609,
     "description": "Some glory in their birth, some in their skill,\nSo..."
   },
   {
-    "id": 93,
+    "id": 92,
     "title": "Sonnet XCII",
     "type": "sonnet",
     "year": 1609,
     "description": "But do thy worst to steal thyself away,\nFor term o..."
   },
   {
-    "id": 94,
+    "id": 93,
     "title": "Sonnet XCII",
     "type": "sonnet",
     "year": 1609,
     "description": "So shall I live, supposing thou art true,\nLike a d..."
   },
   {
-    "id": 95,
+    "id": 94,
     "title": "Sonnet XCIV",
     "type": "sonnet",
     "year": 1609,
     "description": "They that have power to hurt and will do none,\nTha..."
   },
   {
-    "id": 96,
+    "id": 95,
     "title": "Sonnet XCV",
     "type": "sonnet",
     "year": 1609,
     "description": "How sweet and lovely dost thou make the shame\nWhic..."
   },
   {
-    "id": 97,
+    "id": 96,
     "title": "Sonnet XCVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Some say thy fault is youth, some wantonness;\nSome..."
   },
   {
-    "id": 98,
+    "id": 97,
     "title": "Sonnet XCVII",
     "type": "sonnet",
     "year": 1609,
     "description": "How like a winter hath my absence been\nFrom thee, ..."
   },
   {
-    "id": 99,
+    "id": 98,
     "title": "Sonnet XCVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "From you have I been absent in the spring,\nWhen pr..."
   },
   {
-    "id": 100,
+    "id": 99,
     "title": "Sonnet XCIX",
     "type": "sonnet",
     "year": 1609,
     "description": "The forward violet thus did I chide:\nSweet thief, ..."
   },
   {
-    "id": 101,
+    "id": 100,
     "title": "Sonnet C",
     "type": "sonnet",
     "year": 1609,
     "description": "Where art thou, Muse, that thou forget'st so long\n..."
   },
   {
-    "id": 102,
+    "id": 101,
     "title": "Sonnet CI",
     "type": "sonnet",
     "year": 1609,
     "description": "O truant Muse, what shall be thy amends\nFor thy ne..."
   },
   {
-    "id": 103,
+    "id": 102,
     "title": "Sonnet CII",
     "type": "sonnet",
     "year": 1609,
     "description": "My love is strengthen'd, though more weak in seemi..."
   },
   {
-    "id": 104,
+    "id": 103,
     "title": "Sonnet CIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Alack, what poverty my Muse brings forth,\nThat hav..."
   },
   {
-    "id": 105,
+    "id": 104,
     "title": "Sonnet CIV",
     "type": "sonnet",
     "year": 1609,
     "description": "To me, fair friend, you never can be old,\nFor as y..."
   },
   {
-    "id": 106,
+    "id": 105,
     "title": "Sonnet CV",
     "type": "sonnet",
     "year": 1609,
     "description": "Let not my love be call'd idolatry,\nNor my beloved..."
   },
   {
-    "id": 107,
+    "id": 106,
     "title": "Sonnet CVI",
     "type": "sonnet",
     "year": 1609,
     "description": "When in the chronicle of wasted time\nI see descrip..."
   },
   {
-    "id": 108,
+    "id": 107,
     "title": "Sonnet CVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Not mine own fears, nor the prophetic soul\nOf the ..."
   },
   {
-    "id": 109,
+    "id": 108,
     "title": "Sonnet CVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "What's in the brain that ink may character\nWhich h..."
   },
   {
-    "id": 110,
+    "id": 109,
     "title": "Sonnet CIX",
     "type": "sonnet",
     "year": 1609,
     "description": "O, never say that I was false of heart,\nThough abs..."
   },
   {
-    "id": 111,
+    "id": 110,
     "title": "Sonnet CX",
     "type": "sonnet",
     "year": 1609,
     "description": "Alas, 'tis true I have gone here and there\nAnd mad..."
   },
   {
-    "id": 112,
+    "id": 111,
     "title": "Sonnet CXI",
     "type": "sonnet",
     "year": 1609,
     "description": "O, for my sake do you with Fortune chide,\nThe guil..."
   },
   {
-    "id": 113,
+    "id": 112,
     "title": "Sonnet CXII",
     "type": "sonnet",
     "year": 1609,
     "description": "Your love and pity doth the impression fill\nWhich ..."
   },
   {
-    "id": 114,
+    "id": 113,
     "title": "Sonnet CXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Since I left you, mine eye is in my mind;\nAnd that..."
   },
   {
-    "id": 115,
+    "id": 114,
     "title": "Sonnet CXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "Or whether doth my mind, being crown'd with you,\nD..."
   },
   {
-    "id": 116,
+    "id": 115,
     "title": "Sonnet CXV",
     "type": "sonnet",
     "year": 1609,
     "description": "Those lines that I before have writ do lie,\nEven t..."
   },
   {
-    "id": 117,
+    "id": 116,
     "title": "Sonnet CXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Let me not to the marriage of true minds\nAdmit imp..."
   },
   {
-    "id": 118,
+    "id": 117,
     "title": "Sonnet CXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Accuse me thus: that I have scanted all\nWherein I ..."
   },
   {
-    "id": 119,
+    "id": 118,
     "title": "Sonnet CXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Like as, to make our appetites more keen,\nWith eag..."
   },
   {
-    "id": 120,
+    "id": 119,
     "title": "Sonnet CXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "What potions have I drunk of Siren tears,\nDistill'..."
   },
   {
-    "id": 121,
+    "id": 120,
     "title": "Sonnet CXX",
     "type": "sonnet",
     "year": 1609,
     "description": "That you were once unkind befriends me now,\nAnd fo..."
   },
   {
-    "id": 122,
+    "id": 121,
     "title": "Sonnet CXXI",
     "type": "sonnet",
     "year": 1609,
     "description": "'Tis better to be vile than vile esteem'd,\nWhen no..."
   },
   {
-    "id": 123,
+    "id": 122,
     "title": "Sonnet CXXII",
     "type": "sonnet",
     "year": 1609,
     "description": "Thy gift, thy tables, are within my brain\nFull cha..."
   },
   {
-    "id": 124,
+    "id": 123,
     "title": "Sonnet CXXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "No, Time, thou shalt not boast that I do change:\nT..."
   },
   {
-    "id": 125,
+    "id": 124,
     "title": "Sonnet CXXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "If my dear love were but the child of state,\nIt mi..."
   },
   {
-    "id": 126,
+    "id": 125,
     "title": "Sonnet CXXV",
     "type": "sonnet",
     "year": 1609,
     "description": "Were 't aught to me I bore the canopy,\nWith my ext..."
   },
   {
-    "id": 127,
+    "id": 126,
     "title": "Sonnet CXXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "O thou, my lovely boy, who in thy power\nDost hold ..."
   },
   {
-    "id": 128,
+    "id": 127,
     "title": "Sonnet CXXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "In the old age black was not counted fair,\nOr if i..."
   },
   {
-    "id": 129,
+    "id": 128,
     "title": "Sonnet CXXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "How oft, when thou, my music, music play'st,\nUpon ..."
   },
   {
-    "id": 130,
+    "id": 129,
     "title": "Sonnet CXXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "The expense of spirit in a waste of shame\nIs lust ..."
   },
   {
-    "id": 131,
+    "id": 130,
     "title": "Sonnet CXXX",
     "type": "sonnet",
     "year": 1609,
     "description": "My mistress' eyes are nothing like the sun;\nCoral ..."
   },
   {
-    "id": 132,
+    "id": 131,
     "title": "Sonnet CXXXI",
     "type": "sonnet",
     "year": 1609,
     "description": "Thou art as tyrannous, so as thou art,\nAs those wh..."
   },
   {
-    "id": 133,
+    "id": 132,
     "title": "Sonnet CXXXII",
     "type": "sonnet",
     "year": 1609,
     "description": "Thine eyes I love, and they, as pitying me,\nKnowin..."
   },
   {
-    "id": 134,
+    "id": 133,
     "title": "Sonnet CXXXIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Beshrew that heart that makes my heart to groan\nFo..."
   },
   {
-    "id": 135,
+    "id": 134,
     "title": "Sonnet CXXXIV",
     "type": "sonnet",
     "year": 1609,
     "description": "So, now I have confess'd that he is thine,\nAnd I m..."
   },
   {
-    "id": 136,
+    "id": 135,
     "title": "Sonnet CXXXV",
     "type": "sonnet",
     "year": 1609,
     "description": "Whoever hath her wish, thou hast thy 'Will,'\nAnd '..."
   },
   {
-    "id": 137,
+    "id": 136,
     "title": "Sonnet CXXXVI",
     "type": "sonnet",
     "year": 1609,
     "description": "If thy soul check thee that I come so near,\nSwear ..."
   },
   {
-    "id": 138,
+    "id": 137,
     "title": "Sonnet CXXXVII",
     "type": "sonnet",
     "year": 1609,
     "description": "Thou blind fool, Love, what dost thou to mine eyes..."
   },
   {
-    "id": 139,
+    "id": 138,
     "title": "Sonnet CXXXVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "When my love swears that she is made of truth\nI do..."
   },
   {
-    "id": 140,
+    "id": 139,
     "title": "Sonnet CXXXIX",
     "type": "sonnet",
     "year": 1609,
     "description": "O, call not me to justify the wrong\nThat thy unkin..."
   },
   {
-    "id": 141,
+    "id": 140,
     "title": "Sonnet CXL",
     "type": "sonnet",
     "year": 1609,
     "description": "Be wise as thou art cruel; do not press\nMy tongue-..."
   },
   {
-    "id": 142,
+    "id": 141,
     "title": "Sonnet CXLI",
     "type": "sonnet",
     "year": 1609,
     "description": "In faith, I do not love thee with mine eyes,\nFor t..."
   },
   {
-    "id": 143,
+    "id": 142,
     "title": "Sonnet CXLII",
     "type": "sonnet",
     "year": 1609,
     "description": "Love is my sin and thy dear virtue hate,\nHate of m..."
   },
   {
-    "id": 144,
+    "id": 143,
     "title": "Sonnet CXLIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Lo! as a careful housewife runs to catch\nOne of he..."
   },
   {
-    "id": 145,
+    "id": 144,
     "title": "Sonnet CXLIV",
     "type": "sonnet",
     "year": 1609,
     "description": "Two loves I have of comfort and despair,\nWhich lik..."
   },
   {
-    "id": 146,
+    "id": 145,
     "title": "Sonnet CXLV",
     "type": "sonnet",
     "year": 1609,
     "description": "Those lips that Love's own hand did make\nBreathed ..."
   },
   {
-    "id": 147,
+    "id": 146,
     "title": "Sonnet CXLVI",
     "type": "sonnet",
     "year": 1609,
     "description": "Poor soul, the centre of my sinful earth,\n......th..."
   },
   {
-    "id": 148,
+    "id": 147,
     "title": "Sonnet CXLVII",
     "type": "sonnet",
     "year": 1609,
     "description": "My love is as a fever, longing still\nFor that whic..."
   },
   {
-    "id": 149,
+    "id": 148,
     "title": "Sonnet CXLVIII",
     "type": "sonnet",
     "year": 1609,
     "description": "O me, what eyes hath Love put in my head,\nWhich ha..."
   },
   {
-    "id": 150,
+    "id": 149,
     "title": "Sonnet CXLIX",
     "type": "sonnet",
     "year": 1609,
     "description": "Canst thou, O cruel! say I love thee not,\nWhen I a..."
   },
   {
-    "id": 151,
+    "id": 150,
     "title": "Sonnet CL",
     "type": "sonnet",
     "year": 1609,
     "description": "O, from what power hast thou this powerful might\nW..."
   },
   {
-    "id": 152,
+    "id": 151,
     "title": "Sonnet CLI",
     "type": "sonnet",
     "year": 1609,
     "description": "Love is too young to know what conscience is;\nYet ..."
   },
   {
-    "id": 153,
+    "id": 152,
     "title": "Sonnet CLII",
     "type": "sonnet",
     "year": 1609,
     "description": "In loving thee thou know'st I am forsworn,\nBut tho..."
   },
   {
-    "id": 154,
+    "id": 153,
     "title": "Sonnet CLIII",
     "type": "sonnet",
     "year": 1609,
     "description": "Cupid laid by his brand, and fell asleep:\nA maid o..."
   },
   {
-    "id": 155,
+    "id": 154,
     "title": "Sonnet CLIV",
     "type": "sonnet",
     "year": 1609,
     "description": "The little love-god lying once asleep\nLaid by his ..."
+  },
+  {
+    "id": 155,
+    "title": "Hamlet",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 156,
+    "title": "As You Like It",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 157,
+    "title": "The Comedy of Errors",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 158,
+    "title": "Coriolanus",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 159,
+    "title": "Cymbeline",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 160,
+    "title": "King Henry V",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 161,
+    "title": "King Henry VIII.",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 162,
+    "title": "King Henry VI. Part II.",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 163,
+    "title": "King Henry VI. Part III.",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 164,
+    "title": "Much Ado About Nothing",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 165,
+    "title": "Antony and Cleopatra",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
+  },
+  {
+    "id": 166,
+    "title": "All's Well That Ends Well",
+    "type": "play",
+    "year": 1500,
+    "description": "A 1500 play by William Shakespeare"
   }
 ]

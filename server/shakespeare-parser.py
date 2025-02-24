@@ -98,6 +98,26 @@ def parse_sonnets_file(file_path):
 
     return sonnets
 
+def is_play_file(filename):
+    """Check if a file is a Shakespeare play XML."""
+    return (filename.endswith('.xml') and 
+            filename != 'son.xml' and  # Not sonnets
+            filename != 'schmidt.xml')  # Not lexicon
+
+def safe_int(value):
+    """Safely convert a string to int, handling special cases."""
+    if not value:
+        return 0
+    value = value.lower()
+    if value == 'prologue':
+        return 0
+    if value == 'epilogue':
+        return 99
+    try:
+        return int(value)
+    except ValueError:
+        return 0
+
 def generate_works_data():
     """Generate the full works data from XML files."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -111,9 +131,6 @@ def generate_works_data():
 
     # Process all XML files in the assets directory
     for filename in os.listdir(assets_dir):
-        if not filename.endswith('.xml'):
-            continue
-
         file_path = os.path.join(assets_dir, filename)
         print(f"Processing {filename}...")
 
@@ -141,11 +158,15 @@ def generate_works_data():
                 passage_id += 1
             continue
 
+        # Skip non-play files
+        if not is_play_file(filename):
+            continue
+
         # Handle plays
         try:
             play = parse_play_file(file_path)
             if play:
-                # Get play year from file content or use default
+                # Get play year from file content
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
                 year = get_play_year(content)
@@ -160,34 +181,23 @@ def generate_works_data():
 
                 # Add passages for each scene
                 for act in play['acts']:
-                    try:
-                        act_number = int(act['number'])
-                    except ValueError:
-                        print(f"Warning: Non-numeric act number '{act['number']}' in {filename}")
-                        continue
+                    act_number = safe_int(act['number'])
 
                     for scene in act['scenes']:
-                        try:
-                            # Handle special scene numbers like 'prologue'
-                            if scene['number'].lower() == 'prologue':
-                                scene_number = 0
-                            else:
-                                scene_number = int(scene['number'])
+                        scene_number = safe_int(scene['number'])
 
-                            passages.append({
-                                'id': passage_id,
-                                'workId': work_id,
-                                'title': f"Act {act['number']}, Scene {scene['number']}",
-                                'content': scene['content'],
-                                'act': act_number,
-                                'scene': scene_number
-                            })
-                            passage_id += 1
-                        except ValueError as e:
-                            print(f"Warning: Skipping scene with invalid number '{scene['number']}' in {filename}")
-                            continue
+                        passages.append({
+                            'id': passage_id,
+                            'workId': work_id,
+                            'title': f"Act {act['number']}, Scene {scene['number']}",
+                            'content': scene['content'],
+                            'act': act_number,
+                            'scene': scene_number
+                        })
+                        passage_id += 1
 
                 work_id += 1
+                print(f"Added {play['title']}")
         except Exception as e:
             print(f"Error processing {filename}: {str(e)}")
             continue
